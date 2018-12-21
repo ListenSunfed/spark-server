@@ -8,7 +8,6 @@ package com.navinfo.sparkserver.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.navinfo.sparkserver.model.Session;
-import com.navinfo.sparkserver.service.SessionService;
 import com.navinfo.sparkserver.service.impl.SessionServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -33,12 +32,12 @@ import javax.annotation.Resource;
 @Slf4j
 @RequestMapping("/session")
 @Api(description = "会话服务接口")
-public class sessionController {
+public class SessionController {
 
     @Resource(name = "sessionService")
     SessionServiceImpl sessionService;
 
-    private static final Logger logger= LoggerFactory.getLogger(sessionController.class);
+    private static final Logger logger= LoggerFactory.getLogger(SessionController.class);
 
     @ApiOperation(value = "根据sessionId查询某个session", notes = "通过livy代理的spark中某个session状态")
     @ApiImplicitParam(name = "sessionId", value = "sessionId", paramType = "query", required = true, dataType = "String")
