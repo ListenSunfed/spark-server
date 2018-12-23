@@ -32,16 +32,24 @@ public class SessionServiceImpl implements SessionService {
     String livyUrl;
 
     @Override
-    public Session createSession() {
-        String url = livyUrl+"/sessions";
-        String postData = "{\"kind\":\"spark\"}";
+    public Session createSession(String queue, String driverMemory, String executorMemory, String driverCores, String numExecutors, String executorCores) {
+        String url = livyUrl + "/sessions";
+        String postData = "{" +
+                "\"kind\":\"spark\"," +
+                "\"queue\":quqe," +
+                "\"driverMemory\":driverMemory," +
+                "\"executorMemory\":executorMemory," +
+                "\"driverCores\":driverCores," +
+                "\"numExecutors\":numExecutors," +
+                "\"executorCores\":executorCores" +
+                "}";
         String result = LivyTool.sendPostReq(url, postData);
         return JSON.parseObject(result, Session.class);
     }
 
     @Override
     public Session getSession(String sessionID) {
-        String url = livyUrl+"/sessions/"+sessionID;
+        String url = livyUrl + "/sessions/" + sessionID;
         String result = "";
         try {
             result = LivyTool.requestGetJson(url, null);
@@ -55,7 +63,7 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public List<Session> getAllSession() {
         String result = "";
-        String url = livyUrl+"/sessions";
+        String url = livyUrl + "/sessions";
         try {
             result = LivyTool.requestGetJson(url, null);
         } catch (IOException e) {
@@ -68,7 +76,7 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public void closeSession(String sessionID) {
         String result = "";
-        String url = livyUrl+"/sessions/"+sessionID;
+        String url = livyUrl + "/sessions/" + sessionID;
         try {
             result = LivyTool.requestDeleteJson(url, null);
         } catch (IOException e) {
@@ -79,7 +87,7 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public String submitSql(String sessionId, String sql) {
         String result = "";
-        String url = livyUrl+"/sessions/"+sessionId+ "/statements";
+        String url = livyUrl + "/sessions/" + sessionId + "/statements";
         String postData = "{\"code\":\"" + sql + "\",\"kind\":\"sql\"}";
         result = LivyTool.sendPostReq(url, postData);
         return result;

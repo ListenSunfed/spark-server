@@ -7,6 +7,7 @@
 package com.navinfo.sparkserver.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * @create 2018/12/21
  * @since 1.0.0
  ************************************/
+@CrossOrigin("*")
 @Controller
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
     /**

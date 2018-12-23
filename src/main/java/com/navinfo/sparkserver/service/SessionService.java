@@ -23,8 +23,14 @@ public interface SessionService {
     /**
      * 创建新的会话
      * @return
+     * @param queue
+     * @param driverMemory
+     * @param executorMemory
+     * @param driverCores
+     * @param numExecutors
+     * @param executorCores
      */
-    Session createSession();
+    Session createSession(String queue, String driverMemory, String executorMemory, String driverCores, String numExecutors, String executorCores);
 
     /**
      * 根据session查找指定session
