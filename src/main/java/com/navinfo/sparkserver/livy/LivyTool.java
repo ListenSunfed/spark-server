@@ -228,12 +228,12 @@ public class LivyTool {
         } catch (Exception e) {
             log.error(e.getMessage());
         } finally {
-            if (in != null)
+            if (in != null){
                 try {
                     in.close();
                 } catch (IOException e) {
                 }
-        }
+        }}
         // 返回
         return result;
     }
@@ -271,11 +271,12 @@ public class LivyTool {
         } catch (Exception e) {
             log.error(e.getMessage());
         } finally {
-            if (in != null)
+            if (in != null) {
                 try {
                     in.close();
                 } catch (IOException e) {
                 }
+            }
         }
         // 返回
         return result;

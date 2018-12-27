@@ -90,7 +90,9 @@ public class WebSocketController {
     @MessageMapping("/chat")
     //在springmvc中,可以直接在参数中获得principal,pinciple中包含当前用户信息
     public void handleChat(Principal principal, String msg) {
-        if ("james".equals(principal.getName())) {//硬编码,对用户姓名进行判断
+        String default1="james";
+        String default2="curry";
+        if (default1.equals(principal.getName())) {//硬编码,对用户姓名进行判断
             //向用户发送消息,第一个参数:接收消息的用户,第二个参数:浏览器订阅地址,第三个参数:消息
             simpMessagingTemplate.convertAndSendToUser("curry",
                     "/queue/notifications", principal.getName() + "-send: " + msg);

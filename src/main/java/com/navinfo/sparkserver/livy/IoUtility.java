@@ -46,8 +46,9 @@ public class IoUtility {
             // 已读数据长度
             rlt += l;
             // 判断是否已读满指定长度
-            if (rlt >= len)
+            if (rlt >= len) {
                 break;
+            }
         }
         // 返回
         return rlt;
