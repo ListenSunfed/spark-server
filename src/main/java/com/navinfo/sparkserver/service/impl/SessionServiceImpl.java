@@ -31,7 +31,7 @@ import java.util.List;
 @Service("sessionService")
 public class SessionServiceImpl implements SessionService {
 
-    @Value("${livy.url}")
+    @Value("${livy.ur}")
     String livyUrl;
 
     @Override
