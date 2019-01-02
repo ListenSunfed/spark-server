@@ -25,6 +25,7 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 /**
  * 开启WebSocket支持
+ *
  * @author wulongyue
  */
 @Configuration
@@ -47,6 +48,16 @@ public class WebSocket extends AbstractWebSocketMessageBrokerConfigurer {
 //      registry.enableSimpleBroker("/topic");
 
         //点对点式应配置/queue和/topic消息代理
-        registry.enableSimpleBroker("/queue","/topic");
+        registry.enableSimpleBroker("/queue", "/topic");
+    }
+
+    @Bean
+    public SocketSessionRegistry SocketSessionRegistry() {
+        return new SocketSessionRegistry();
+    }
+
+    @Bean
+    public STOMPConnectEventListener STOMPConnectEventListener() {
+        return new STOMPConnectEventListener();
     }
 }

@@ -9,12 +9,15 @@ package com.navinfo.sparkserver.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.navinfo.sparkserver.livy.LivyTool;
 import com.navinfo.sparkserver.model.Session;
+import com.navinfo.sparkserver.model.Statement;
+import com.navinfo.sparkserver.model.StatementSimple;
 import com.navinfo.sparkserver.service.SessionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /*************************************
@@ -36,12 +39,12 @@ public class SessionServiceImpl implements SessionService {
         String url = livyUrl + "/sessions";
         String postData = "{" +
                 "\"kind\":\"spark\"," +
-                "\"queue\":quqe," +
-                "\"driverMemory\":driverMemory," +
-                "\"executorMemory\":executorMemory," +
-                "\"driverCores\":driverCores," +
-                "\"numExecutors\":numExecutors," +
-                "\"executorCores\":executorCores" +
+//                "\"queue\":\""+queue+"\"," +
+                "\"driverMemory\":\""+driverMemory+"\"," +
+                "\"executorMemory\":\""+executorMemory+"\"," +
+                "\"driverCores\":"+driverCores+"," +
+                "\"numExecutors\":"+numExecutors+"," +
+                "\"executorCores\":"+executorCores+
                 "}";
         String result = LivyTool.sendPostReq(url, postData);
         return JSON.parseObject(result, Session.class);
@@ -74,7 +77,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public void closeSession(String sessionID) {
+    public String closeSession(String sessionID) {
         String result = "";
         String url = livyUrl + "/sessions/" + sessionID;
         try {
@@ -82,6 +85,7 @@ public class SessionServiceImpl implements SessionService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return result;
     }
 
     @Override
@@ -94,8 +98,32 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public String getAllresults(String sessionId) {
-        return null;
+    public String submitCode(String sessionId, String code) {
+        String result = "";
+        String url = livyUrl + "/sessions/" + sessionId + "/statements";
+        String postData = "{\"code\":\"" + code+"\"}";
+        result = LivyTool.sendPostReq(url, postData);
+        log.info(code+"的执行结果是："+result);
+        return result;
+    }
+
+    @Override
+    public List<StatementSimple> getAllresults(String sessionId) {
+        String result = "";
+        String url = livyUrl + "/sessions/" + sessionId + "/statements";
+        try {
+            result = LivyTool.requestGetJson(url, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(result);
+
+        List<StatementSimple> statements = new ArrayList<>();
+        statements.add(new StatementSimple("1","select * from aaa","ok"));
+        statements.add(new StatementSimple("2","select * from bbb","ok"));
+        statements.add(new StatementSimple("3","select * from ccc","ok"));
+        statements.add(new StatementSimple("4","select * from ddd","running"));
+        return statements;
     }
 
     @Override

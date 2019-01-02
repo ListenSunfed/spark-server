@@ -8,6 +8,7 @@ package com.navinfo.sparkserver.service;
 
 
 import com.navinfo.sparkserver.model.Session;
+import com.navinfo.sparkserver.model.StatementSimple;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ public interface SessionService {
      * 关闭指定会话窗口
      * @return
      */
-    void closeSession(String sessionID);
+    String closeSession(String sessionID);
 
     /**
      * 提交sql请求
@@ -60,11 +61,19 @@ public interface SessionService {
     String submitSql(String sessionId, String sql);
 
     /**
+     * 提交代码片段请求
+     * @param sessionId
+     * @param code
+     * @return
+     */
+    String submitCode(String sessionId, String code);
+
+    /**
      * 查询指定会话的所有任务结果
      * @param sessionId
      * @return
      */
-    String getAllresults(String sessionId);
+    List<StatementSimple> getAllresults(String sessionId);
 
     /**
      * 查询指定会话的指定任务结果

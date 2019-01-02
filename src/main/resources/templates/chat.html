@@ -27,17 +27,17 @@
 
     var sock = new SockJS("/endpointChat");//连接endpoint名为"endpointChat"的endpoint
     var stomp = Stomp.over(sock);
-    stomp.connect('guest','guest',function(frame){
+    stomp.connect({'login':'12345'},function(frame){
         //订阅/user/queue/notifications发送的消息,这里与在simpMessagingTemplate.convertAndSendToUser定义地址一致,/user是必须的
         stomp.subscribe("/user/queue/notifications",handleNotification);
     });
 
     function handleNotification(message){
-        $("#output").append("<b>Received: " + message.body + "</b><br/>");
+        $("#output").append("<b>Received: khjgfdhjkhgfd" + message.body + "</b><br/>");
     }
 
     function sendSpittle(text){
-        stomp.send("/chat",{},text);
+        stomp.send("/chat",{'login':'12345'},JSON.stringify({'name': 'yue','id':'12345'}));
     }
 
     $("#stop").click(function(){

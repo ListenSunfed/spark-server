@@ -21,5 +21,18 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ResponseMessage {
-    private String responseMessage;
+
+    private String content;
+
+    public ResponseMessage() {
+    }
+
+    public ResponseMessage(String content) {
+        this.content = content;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
 }

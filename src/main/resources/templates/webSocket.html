@@ -34,7 +34,7 @@
     function connect(){
         var socket = new SockJS('/endpointAric'); //连接SockJS的endpoint名称为"endpointWisely"
         stompClient = Stomp.over(socket);//使用STMOP子协议的WebSocket客户端
-        stompClient.connect({},function(frame){//连接WebSocket服务端
+        stompClient.connect({'login':'12345'},function(frame){//连接WebSocket服务端
             setConnected(true);
             console.log('Connected:' + frame);
             //通过stompClient.subscribe订阅/topic/getResponse 目标(destination)发送的消息,这个是在控制器的@SentTo中定义的
