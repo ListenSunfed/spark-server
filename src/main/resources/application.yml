@@ -1,7 +1,6 @@
 ################### livy配置
 livy:
- url：http://datalake-data04:8998
-
+  url: http://datalake-data04:8998
 ################### DataSource Configuration
 spring:
   datasource:

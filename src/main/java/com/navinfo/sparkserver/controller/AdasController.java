@@ -1,6 +1,8 @@
 package com.navinfo.sparkserver.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.navinfo.sparkserver.model.BatchesMessage;
+import com.navinfo.sparkserver.model.BatchesResponse;
 import com.navinfo.sparkserver.model.Session;
 import com.navinfo.sparkserver.service.AdasService;
 import io.swagger.annotations.Api;
@@ -62,7 +64,7 @@ public class AdasController {
             @ApiImplicitParam(name = "numExecutors", value = "spark shell运行时的executor的总个数", paramType = "query", required = true, dataType = "String"),
             @ApiImplicitParam(name = "executorCores", value = "spark shell运行时每个executor占用的cpu数", paramType = "query", required = true, dataType = "String")
     })
-    @PostMapping(value = "/session", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/adas", produces = MediaType.APPLICATION_JSON_VALUE)
     public String createSession(
             @RequestParam(value = "jarPath") String jarPath,
             @RequestParam(value = "projectName") String projectName,
@@ -76,7 +78,8 @@ public class AdasController {
             @RequestParam(value = "executorCores", defaultValue = "1") String executorCores
     ) {
         logger.info(String.format("启动%s",projectName));
-        String adasResult = adasService.submitAdas(
+        String batchID = adasService.submitAdas(
+                new BatchesMessage(
                 jarPath,
                 projectName,
                 className,
@@ -87,9 +90,25 @@ public class AdasController {
                 driverCores,
                 numExecutors,
                 executorCores
+                )
         );
-        return JSON.toJSONString(adasResult);
+        return JSON.toJSONString(batchID);
     }
 
+    /**
+     * 根据指定batchId查询batch信息
+     * @param batchId
+     * @return
+     */
+    @ApiOperation(value = "根据batchId查询某个任务的详细信息", notes = "在任务提交时会得到任务提交的信息，其中就有此次任务的id")
+    @ApiImplicitParam(name = "batchId", value = "batch任务id", paramType = "query", required = true, dataType = "String")
+    @GetMapping(value = "/batch", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getBatch(
+            @RequestParam(value = "batchId", defaultValue = "0") String batchId
+    ) {
+        BatchesResponse batchInfo = adasService.getBatchInfo(batchId);
+        logger.info(String.format("根据batchId:%s查询任务的详细信息",batchId));
+        return JSON.toJSONString(batchInfo);
+    }
 
 }
