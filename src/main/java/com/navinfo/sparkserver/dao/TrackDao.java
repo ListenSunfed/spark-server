@@ -36,7 +36,7 @@ public class TrackDao extends CommonWrapDao<TrackSource>{
      * @return
      */
     public List<TrackSource> listAllTrack(){
-        String sql = "select project_id as \"projectId\",status,err_type as \"errType\",algorithm_code as \"algorithmCode\",create_time as \"createTime\",update_time as \"updateTime\" from "+ t_data_import_log;
+        String sql = "select project_id as \"projectId\",status,err_type as \"errType\",algorithm_code as \"algorithmCode\",create_time as \"createTime\",update_time as \"updateTime\",file_path as \"filePath\" from "+ t_data_import_log;
         logger.info("执行sql语句："+sql);
         List<TrackSource> trackSources = listAll(sql);
         return trackSources;

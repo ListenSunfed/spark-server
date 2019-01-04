@@ -24,7 +24,7 @@ import java.util.List;
  * @create 2018/12/17
  * @since 1.0.0
  ************************************/
-public class SubmitDemo {
+public class  SubmitDemo {
 
 
     /**

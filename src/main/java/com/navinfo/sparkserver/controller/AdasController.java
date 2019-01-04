@@ -30,6 +30,7 @@ public class AdasController {
 
     /**
      * 查询所有需要执行的轨迹
+     *
      * @return
      */
     @ApiOperation(value = "查询所有需要导入的轨迹", notes = "查找需要导入的轨迹串信息")
@@ -43,6 +44,7 @@ public class AdasController {
 
     /**
      * 开始一次计算任务
+     *
      * @param queue
      * @param driverMemory
      * @param executorMemory
@@ -77,7 +79,7 @@ public class AdasController {
             @RequestParam(value = "numExecutors", defaultValue = "1") String numExecutors,
             @RequestParam(value = "executorCores", defaultValue = "1") String executorCores
     ) {
-        logger.info(String.format("启动%s",projectName));
+        logger.info(String.format("启动%s", projectName));
         String batchID = adasService.submitAdas(
                 new BatchesMessage(
                 jarPath,
@@ -97,6 +99,7 @@ public class AdasController {
 
     /**
      * 根据指定batchId查询batch信息
+     *
      * @param batchId
      * @return
      */
@@ -107,7 +110,7 @@ public class AdasController {
             @RequestParam(value = "batchId", defaultValue = "0") String batchId
     ) {
         BatchesResponse batchInfo = adasService.getBatchInfo(batchId);
-        logger.info(String.format("根据batchId:%s查询任务的详细信息",batchId));
+        logger.info(String.format("根据batchId:%s查询任务的详细信息", batchId));
         return JSON.toJSONString(batchInfo);
     }
 

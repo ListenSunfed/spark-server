@@ -28,13 +28,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.security.Principal;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /*************************************
  * Class Name: WebSocketController
@@ -72,27 +67,6 @@ public class WebSocketController {
         return "/messaget2";
     }
 
-//    /**
-//     * 用户广播
-//     * 发送消息广播  用于内部发送使用
-//     * @param request
-//     * @return
-//     */
-//    @MessageMapping("/msg/sendcommuser")
-//    @ResponseBody
-//    public ResponseMessage SendToCommUserMessage(HttpServletRequest request){
-//        List<String> keys=webAgentSessionRegistry.getAllSessionIds().entrySet()
-//                .stream().map(Map.Entry::getKey)
-//                .collect(Collectors.toList());
-//        Date date=new Date();
-//        keys.forEach(x->{
-//            String sessionId=webAgentSessionRegistry.getSessionIds(x).stream().findFirst().get().toString();
-//            template.convertAndSendToUser(sessionId,"/topic/greetings",new ResponseMessage("commmsg：allsend, " + "send  comm" +date.getTime()+ "!"),createHeaders(sessionId));
-//
-//        });
-//        return new ResponseMessage("sendcommuser, " + new Date() + "!");
-//    }
-
     /**
      * 同样的发送消息   只不过是ws版本  http请求不能访问
      * 根据用户key发送消息
@@ -121,28 +95,6 @@ public class WebSocketController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    // 收到消息记数
-    private AtomicInteger count = new AtomicInteger(0);
-
-
-//    /**
-//     * @MessageMapping 指定要接收消息的地址，类似@RequestMapping。除了注解到方法上，也可以注解到类上
-//     * @SendTo默认 消息将被发送到与传入消息相同的目的地
-//     * 消息的返回值是通过{@link org.springframework.messaging.converter.MessageConverter}进行转换
-//     * @param requestMessage
-//     * @return
-//     */
-//    @MessageMapping("/receive")
-//    @SendTo("/topic/getResponse")
-//    public ResponseMessage broadcast(RequestMessage requestMessage){
-//        logger.info("receive message = {}" , JSONObject.toJSONString(requestMessage));
-//        ResponseMessage responseMessage = new ResponseMessage();
-//        responseMessage.setResponseMessage("BroadcastCtl receive [" + count.incrementAndGet() + "] records");
-//        return responseMessage;
-//    }
-//
-//    @ApiOperation(value = "登陆", notes = "验证用户名密码")
-//
     @ApiImplicitParams({
             @ApiImplicitParam(name = "username", value = "用户名", paramType = "query", required = true, dataType = "String"),
             @ApiImplicitParam(name = "password", value = "密码", paramType = "query", required = true, dataType = "String")
@@ -166,7 +118,6 @@ public class WebSocketController {
     }
 
     @MessageMapping("/chat")
-    //在springmvc中,可以直接在参数中获得principal,pinciple中包含当前用户信息
     public void handleChat( RequestMessage message) {
         String sessionId=webAgentSessionRegistry.getSessionIds("12345").stream().findFirst().get();
 //        String default1="james";
