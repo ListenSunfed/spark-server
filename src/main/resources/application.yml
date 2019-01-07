@@ -18,3 +18,5 @@ spring:
 #建立的表名称
     table:
       t_data_import_log: public.t_data_import_log      #导入轨迹信息
+      t_program: public.t_program      #程序信息表
+      t_application_info: public.t_application_info      #任务运行的信息

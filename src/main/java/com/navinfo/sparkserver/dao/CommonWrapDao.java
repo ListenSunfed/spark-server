@@ -75,4 +75,47 @@ public class CommonWrapDao<T> extends CommonDao {
                 });
         return list;
     }
+
+    /**
+     * 查询一个对象
+     *
+     * @param sql
+     * @return
+     */
+    protected T getBean(String sql) {
+        T projectStatus = jdbcTemplate.query(sql, new ResultSetExtractor<T>() {
+            @Nullable
+            @Override
+            public T extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+                T entity = null;
+                try {
+                    entity = clazz.newInstance();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                if (resultSet.next()) {
+                    ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+                    int columnCount = resultSetMetaData.getColumnCount();
+                    for (int n = 1; n <= columnCount; n++) {
+                        String columnName = resultSetMetaData.getColumnName(n);
+                        Object value = resultSet.getObject(columnName);
+                        try {
+
+                            BeanUtils.setProperty(entity, columnName, value);
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        } catch (InvocationTargetException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                return entity;
+            }
+        });
+        return projectStatus;
+    }
+
 }

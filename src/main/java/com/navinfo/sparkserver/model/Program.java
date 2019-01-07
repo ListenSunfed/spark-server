@@ -1,27 +1,27 @@
 package com.navinfo.sparkserver.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor()
+@NoArgsConstructor
 public class Program {
     /**
     *   程序名
     */
-    private String procedureName;
+    private String programName;
 
     /**
     * 程序主类
     */
-    private String procedureMain;
+    private String programMain;
 
     /**
     * 程序路径
     */
-    private String procedurePath;
+    private String programPath;
 
     /**
     * 程序描述
