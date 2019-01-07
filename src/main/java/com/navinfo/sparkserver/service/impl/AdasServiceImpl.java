@@ -6,7 +6,9 @@ import com.navinfo.sparkserver.livy.LivyTool;
 import com.navinfo.sparkserver.model.AricResponse;
 import com.navinfo.sparkserver.model.BatchesMessage;
 import com.navinfo.sparkserver.model.BatchesResponse;
+import com.navinfo.sparkserver.model.Session;
 import com.navinfo.sparkserver.service.AdasService;
+import com.navinfo.sparkserver.service.SessionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service("adasService")
@@ -26,6 +29,9 @@ public class AdasServiceImpl implements AdasService {
 
     @Autowired
     private SimpMessagingTemplate template;
+
+    @Autowired
+    private SessionService sessionService;
 
     @Override
     public String submitAdas(BatchesMessage message) {
@@ -107,5 +113,11 @@ public class AdasServiceImpl implements AdasService {
                 }
             }
         }).start();
+    }
+
+    @Override
+    public List<BatchesResponse> getBatchInfos() {
+        List<Session> allSession = sessionService.getAllSession();
+        return null;
     }
 }

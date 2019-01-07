@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /*************************************
@@ -43,13 +45,31 @@ public class TrackController {
 
     /**
      * 查询所有的轨迹串
+     *
      * @return
      */
     @ApiOperation(value = "查询所有的轨迹串", notes = "所有导入的记录")
     @RequestMapping(value = "/tracks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getTracks(
     ) {
-        List<TrackSource> tracks = trackService.getTracks();
+//        List<TrackSource> tracks = trackService.getTracks();
+        List<TrackSource> tracks = new ArrayList<>();
+        TrackSource trackSource = new TrackSource();
+        trackSource.setAlgorithmCode("1.1");
+        trackSource.setCreateTime(new Date().toString());
+        trackSource.setUpdateTime(new Date().toString());
+        trackSource.setFilePath("file1");
+        trackSource.setProjectId("111");
+        trackSource.setType("中");
+        TrackSource trackSource2 = new TrackSource();
+        trackSource2.setAlgorithmCode("1.2");
+        trackSource2.setCreateTime(new Date().toString());
+        trackSource2.setUpdateTime(new Date().toString());
+        trackSource2.setFilePath("file2");
+        trackSource2.setProjectId("222");
+        trackSource2.setType("高");
+        tracks.add(trackSource);
+        tracks.add(trackSource2);
         logger.info("查询所有轨迹串信息");
         return JSON.toJSONString(tracks);
     }

@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin("*")
@@ -113,5 +115,12 @@ public class AdasController {
         logger.info(String.format("根据batchId:%s查询任务的详细信息", batchId));
         return JSON.toJSONString(batchInfo);
     }
+
+//    @MessageMapping("/batches") //当浏览器向服务端发送请求时,通过@MessageMapping映射/welcome这个地址,类似于@ResponseMapping
+//    @SendTo("/topic/getBatches")//当服务器有消息时,会对订阅了@SendTo中的路径的浏览器发送消息
+//    public BatchesResponse batchesStatus() {
+//        adasService.getBatchInfos();
+//        return new BatchesResponse();
+//    }
 
 }

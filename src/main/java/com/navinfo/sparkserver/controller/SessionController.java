@@ -8,6 +8,8 @@ package com.navinfo.sparkserver.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.navinfo.sparkserver.model.BatchesMessage;
+import com.navinfo.sparkserver.model.BatchesResponse;
 import com.navinfo.sparkserver.model.Session;
 import com.navinfo.sparkserver.model.StatementSimple;
 import com.navinfo.sparkserver.service.impl.SessionServiceImpl;
@@ -20,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
