@@ -6,10 +6,6 @@ spring:
       profile: dev
       discovery:
         enabled: true
-  datasource:
-    url: jdbc:postgresql://datalake-master:5432/datalaker
-    username: postgres
-    password: postgres
 ################### Logback Configuration
 log:
   home: logs

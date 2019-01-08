@@ -5,21 +5,18 @@
  * Date: Created in 2018/3/24 10:41
  **************************************/
 package com.navinfo.sparkserver.config;
-
 import org.apache.commons.dbcp.BasicDataSource;
-//import org.apache.hadoop.hbase.HBaseConfiguration;
-//import org.apache.hadoop.hbase.HConstants;
-//import org.apache.hadoop.hbase.client.Connection;
-//import org.apache.hadoop.hbase.client.ConnectionFactory;
-//import org.apache.http.HttpHost;
-//import org.elasticsearch.client.RestClient;
-//import org.elasticsearch.client.RestClientBuilder;
-//import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.sql.DataSource;
 
 
 /*************************************
@@ -34,15 +31,44 @@ public class RootConfig {
     @Autowired
     Environment env;
 
+
+//    @Bean(name = "primaryDataSource")
+//    @Qualifier("primaryDataSource")
+//    @ConfigurationProperties(prefix = "spring.datasource.primary")
+//    public DataSource primaryDataSource(){
+//        return DataSourceBuilder.create().build();
+//    }
+//
+//    @Bean(name = "secondaryDataSource")
+//    @Qualifier("secondaryDataSource")
+//    @Primary
+//    @ConfigurationProperties(prefix = "spring.datasource.secondary")
+//    public DataSource secondaryDataSource(){
+//        return DataSourceBuilder.create().build();
+//    }
+//
+//    @Bean(name = "jdbcTemplate")
+//    public JdbcTemplate primaryJdbcTemplate(@Qualifier("primaryDataSource") DataSource primaryDataSource){
+//        return new JdbcTemplate(primaryDataSource);
+//    }
+//
+//    @Bean(name = "secondaryJdbcTemplate")
+//    public JdbcTemplate secondaryJdbcTemplate(@Qualifier("secondaryDataSource") DataSource secondaryDataSource){
+//        return new JdbcTemplate(secondaryDataSource);
+//    }
+
+
+
+
     @Bean(name = "jdbcTemplate")
     public JdbcTemplate getJdbcTemplate(){
         JdbcTemplate jdbcTemplate=new JdbcTemplate();
         try{
             BasicDataSource dataSource = new BasicDataSource();
-            dataSource.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
-            dataSource.setUrl(env.getProperty("spring.datasource.url"));
-            dataSource.setUsername(env.getProperty("spring.datasource.username"));
-            dataSource.setPassword(env.getProperty("spring.datasource.password"));
+            dataSource.setDriverClassName(env.getProperty("spring.datasource.primary.driver-class-name"));
+            dataSource.setUrl(env.getProperty("spring.datasource.primary.url"));
+            dataSource.setUsername(env.getProperty("spring.datasource.primary.username"));
+            dataSource.setPassword(env.getProperty("spring.datasource.primary.password"));
             dataSource.setMinIdle(10);
             dataSource.setMaxIdle(100);
             dataSource.setInitialSize(10);
@@ -53,6 +79,27 @@ public class RootConfig {
         }
         return jdbcTemplate;
     }
+
+    @Bean(name = "jdbcTemplate2")
+    public JdbcTemplate getJdbcTemplate2(){
+        JdbcTemplate jdbcTemplate=new JdbcTemplate();
+        try{
+            BasicDataSource dataSource = new BasicDataSource();
+            dataSource.setDriverClassName(env.getProperty("spring.datasource.secondary.driver-class-name"));
+            dataSource.setUrl(env.getProperty("spring.datasource.secondary.url"));
+            dataSource.setUsername(env.getProperty("spring.datasource.secondary.username"));
+            dataSource.setPassword(env.getProperty("spring.datasource.secondary.password"));
+            dataSource.setMinIdle(10);
+            dataSource.setMaxIdle(100);
+            dataSource.setInitialSize(10);
+            dataSource.setMaxActive(100);
+            jdbcTemplate.setDataSource(dataSource);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return jdbcTemplate;
+    }
+
 
 //    @Bean(name = "hbaseConnection")
 //    public Connection getHBaseConnection(){

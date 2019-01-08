@@ -15,7 +15,7 @@ public class SparkServerApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		getTestThreade().start();
+//		getTestThreade().start();
 	}
 
 	@Bean

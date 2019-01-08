@@ -47,7 +47,7 @@ public class Application {
     /**
      * 任务的状态
      */
-    private int state;
+    private String state;
 
     /**
      * 任务运行时间

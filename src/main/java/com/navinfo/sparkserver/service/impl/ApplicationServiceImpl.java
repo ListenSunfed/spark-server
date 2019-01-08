@@ -52,7 +52,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         }else if(state != null){
             sb.append(String.format("where state = '%s'",state));
         }
-        applicationDao.getApplications(sb.toString());
-        return null;
+        List<Application> applications = applicationDao.getApplications(sb.toString());
+        return applications;
     }
 }

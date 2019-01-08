@@ -4,14 +4,24 @@ livy:
 ################### DataSource Configuration
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
+    primary:
+      driver-class-name: org.postgresql.Driver
 #    内网服务器的PG配置
-    url: jdbc:postgresql://172.28.14.23:5432/datalaker_local
+      url: jdbc:postgresql://172.28.14.23:5432/datalaker_local
 #    url: jdbc:postgresql://192.168.3.48:5432/datalaker
 #    username: postgres     #用户名
 #    password: postgres     #密码
-    username: postgres          #用户名
-    password: datalake&2018     #密码
+      username: postgres          #用户名
+      password: datalake&2018     #密码
+    secondary:
+      driver-class-name: org.postgresql.Driver
+        #    内网服务器的PG配置
+      url: jdbc:postgresql://172.28.14.23:5432/datalaker
+        #    url: jdbc:postgresql://192.168.3.48:5432/datalaker
+        #    username: postgres     #用户名
+        #    password: postgres     #密码
+      username: postgres          #用户名
+      password: datalake&2018     #密码
 #    url: jdbc:postgresql://192.168.15.43:5432/datalaker
 #    username: postgres
 #    password: postgres
@@ -20,3 +30,4 @@ spring:
       t_data_import_log: public.t_data_import_log      #导入轨迹信息
       t_program: public.t_program      #程序信息表
       t_application_info: public.t_application_info      #任务运行的信息
+      t_data_import_record: t_data_import_record

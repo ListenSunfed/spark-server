@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import utils.DateUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,10 +50,15 @@ public class ProgramController {
             @RequestParam(value = "args") String args
     ) {
         String time = DateUtils.getNowDateStr();
-        Program program = new Program(programName,programMain,programPath,description,args,time,time);
-        logger.info(String.format("注册一个新的程序：%s",program));
+        Program program = new Program(programName, programMain, programPath, description, args, time, time);
+        Program program1 = programService.getProgram(programName);
+        if(program1!=null){
+            programService.updateProgram(program);
+            logger.info(String.format("程序已经存在，进行更新：%s", program));
+        }
+        logger.info(String.format("注册一个新的程序：%s", program));
         int result = programService.registPragram(program);
-        logger.info(String.format("程序注册结果：%d",result));
+        logger.info(String.format("程序注册结果：%d", result));
         return JSON.toJSONString(program);
     }
     //endregion
@@ -75,10 +81,10 @@ public class ProgramController {
             @RequestParam(value = "args") String args
     ) {
         String time = DateUtils.getNowDateStr();
-        Program program = new Program(programName,programMain,programPath,description,args,time,time);
-        logger.info(String.format("更新一个新的程序:%s",program));
+        Program program = new Program(programName, programMain, programPath, description, args, time, time);
+        logger.info(String.format("更新一个新的程序:%s", program));
         int result = programService.updateProgram(program);
-        logger.info(String.format("程序更新结果:%d",result));
+        logger.info(String.format("程序更新结果:%d", result));
         return JSON.toJSONString(program);
     }
     //endregion
@@ -86,10 +92,10 @@ public class ProgramController {
     //region 删除程序信息
     @ApiOperation(value = "根据程序名删除程序信息", notes = "根据程序名删除对应的程序信息")
     @ApiImplicitParam(name = "programName", value = "程序名", paramType = "query", required = true, dataType = "String")
-    @DeleteMapping(value = "/program",produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/program", produces = MediaType.APPLICATION_JSON_VALUE)
     public String delProgram(@RequestParam(value = "programName") String programName) {
         programService.delProgram(programName);
-        logger.info(String.format("删除程序：%s",programName));
+        logger.info(String.format("删除程序：%s", programName));
         return "ok";
     }
     //endregion
@@ -100,7 +106,7 @@ public class ProgramController {
     @GetMapping(value = "/program", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getProgram(@RequestParam(value = "programName") String programName) {
         Program program = programService.getProgram(programName);
-        logger.info(String.format("根据%s获得程序具体信息：%s",programName,program));
+        logger.info(String.format("根据%s获得程序具体信息：%s", programName, program));
         return JSON.toJSONString(program);
     }
     //endregion
@@ -110,7 +116,12 @@ public class ProgramController {
     @GetMapping(value = "/programs", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getPrograms() {
         List<Program> programs = programService.getPrograms();
-        logger.info(String.format("获得所有程序信息，总共%d条",programs.size()));
+//        List<Program> programs = new ArrayList<>();
+//        Program program = new Program("test1", "testMain", "a", "a", "a", "a", "a");
+//        Program program1 = new Program("test2", "testMain2", "a", "a", "a", "a", "a");
+//        programs.add(program);
+//        programs.add(program1);
+        logger.info(String.format("获得所有程序信息，总共%d条", programs.size()));
         return JSON.toJSONString(programs);
     }
     //endregion
