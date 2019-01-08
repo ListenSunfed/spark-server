@@ -2,12 +2,14 @@ package com.navinfo.sparkserver.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.navinfo.sparkserver.dao.ApplicationDao;
 import com.navinfo.sparkserver.livy.LivyTool;
 import com.navinfo.sparkserver.model.AricResponse;
 import com.navinfo.sparkserver.model.BatchesMessage;
 import com.navinfo.sparkserver.model.BatchesResponse;
 import com.navinfo.sparkserver.model.Session;
-import com.navinfo.sparkserver.service.AdasService;
+import com.navinfo.sparkserver.model.application.ApplicationInfo;
+import com.navinfo.sparkserver.service.BatchService;
 import com.navinfo.sparkserver.service.SessionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ import java.util.List;
 
 @Slf4j
 @Service("adasService")
-public class AdasServiceImpl implements AdasService {
+public class BatchServiceImpl implements BatchService {
 
     @Value("${livy.url}")
     String livyUrl;
@@ -33,8 +35,11 @@ public class AdasServiceImpl implements AdasService {
     @Autowired
     private SessionService sessionService;
 
+    @Autowired
+    private ApplicationDao applicationDao;
+
     @Override
-    public String submitAdas(BatchesMessage message) {
+    public String submitBatch(BatchesMessage message) {
         String url = String.format("%s/batches",livyUrl);
         String postData = "{\"kind\": \"spark\"}";
         String pData = String.format(
@@ -62,6 +67,7 @@ public class AdasServiceImpl implements AdasService {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                long startTime=System.currentTimeMillis();
                 BatchesResponse response = getBatchInfo(batchId);
 //                String batchInfo = getBatchInfo(batchId);
                 while ("starting".equals(response.getState())||"running".equals(response.getState())) {
@@ -71,8 +77,52 @@ public class AdasServiceImpl implements AdasService {
                         e.printStackTrace();
                     }
                     response = getBatchInfo(batchId);
+                    if(response.getDriverLogUrl()==null){
+                        response.setDriverLogUrl(String.format("%s/ui/batch/%s/log",livyUrl,batchId));
+                    }
                     template.convertAndSend("/topic/getBatches", response);
                 }
+                long endTIme = System.currentTimeMillis();
+                ApplicationInfo applicationInfo = null;
+                if (response.getAppId()==null) {
+                    applicationInfo = new ApplicationInfo(
+                            String.format("submitFaild%s", new Date().toString()),
+                            message.getArgs(),
+                            "queue",
+                            message.getDriverMemory(),
+                            message.getExecutorMemory(),
+                            message.getDriverCores(),
+                            message.getNumExecutors(),
+                            message.getExecutorCores(),
+                            message.getTotal(),
+                            message.getOwner(),
+                            startTime,
+                            endTIme
+                    );
+                    applicationInfo.setProgramName(message.getProgramName());
+                    applicationInfo.setApplicationName(message.getProjectName());
+                }else {
+                    applicationInfo = new ApplicationInfo(
+                            response.getAppId(),
+                            message.getArgs(),
+                            "queue",
+                            message.getDriverMemory(),
+                            message.getExecutorMemory(),
+                            message.getDriverCores(),
+                            message.getNumExecutors(),
+                            message.getExecutorCores(),
+                            message.getTotal(),
+                            message.getOwner(),
+                            startTime,
+                            endTIme
+                    );
+                    applicationInfo.setApplicationName(message.getProjectName());
+                    applicationInfo.setDriverLogUrl(response.getDriverLogUrl());
+                    applicationInfo.setSparkUiUrl(response.getSparkUiUrl());
+                    applicationInfo.setState(response.getState());
+                }
+                applicationDao.addApplicationInfo(applicationInfo);
+
             }
         }).start();
         return batchId;
@@ -96,23 +146,6 @@ public class AdasServiceImpl implements AdasService {
         }
 
         return batchInfo;
-    }
-
-    @Override
-    public void loop() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    template.convertAndSend("/topic/getResponse", new AricResponse(new SimpleDateFormat("yyyy年MM月dd日:HH时mm分ss秒").format(new Date(System.currentTimeMillis()))));
-                }
-            }
-        }).start();
     }
 
     @Override

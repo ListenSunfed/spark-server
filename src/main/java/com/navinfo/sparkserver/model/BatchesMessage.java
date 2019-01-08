@@ -72,4 +72,20 @@ public class BatchesMessage {
      *
      */
     private String executorCores;
+
+    /**
+     *
+     */
+    private String total;
+
+    /**
+     *
+     */
+    private String owner;
+
+    /**
+     * 运行任务的程序
+     */
+    private String programName;
+
 }

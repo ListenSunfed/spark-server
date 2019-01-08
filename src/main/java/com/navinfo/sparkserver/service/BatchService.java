@@ -5,13 +5,11 @@ import com.navinfo.sparkserver.model.BatchesResponse;
 
 import java.util.List;
 
-public interface AdasService {
+public interface BatchService {
 
-    String submitAdas(BatchesMessage message);
+    String submitBatch(BatchesMessage message);
 
     BatchesResponse getBatchInfo(String batchId);
-
-    void loop();
 
     List<BatchesResponse> getBatchInfos();
 }

@@ -6,13 +6,11 @@
  **************************************/
 package com.navinfo.sparkserver.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.navinfo.sparkserver.config.SocketSessionRegistry;
 import com.navinfo.sparkserver.model.*;
-import com.navinfo.sparkserver.service.AdasService;
+import com.navinfo.sparkserver.service.BatchService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.MessageHeaders;
@@ -52,7 +50,7 @@ public class WebSocketController {
     private SimpMessagingTemplate template;
 
     @Autowired
-    private AdasService adasService;
+    private BatchService batchService;
 
     @RequestMapping(value = "/index")
     public  String index(){
@@ -136,7 +134,6 @@ public class WebSocketController {
     @MessageMapping("/welcome") //当浏览器向服务端发送请求时,通过@MessageMapping映射/welcome这个地址,类似于@ResponseMapping
     @SendTo("/topic/getResponse")//当服务器有消息时,会对订阅了@SendTo中的路径的浏览器发送消息
     public AricResponse say(AricMessage message) {
-        adasService.loop();
         try {
             //睡眠1秒
             Thread.sleep(1000);
@@ -149,7 +146,7 @@ public class WebSocketController {
     @MessageMapping("/batches") //当浏览器向服务端发送请求时,通过@MessageMapping映射/welcome这个地址,类似于@ResponseMapping
     @SendTo("/topic/getBatches")//当服务器有消息时,会对订阅了@SendTo中的路径的浏览器发送消息
     public BatchesResponse batchesStatus(BatchesMessage message) {
-        String batchId = adasService.submitAdas(message);
+        String batchId = batchService.submitBatch(message);
         String state = "starting";
         while(state!="success"||state!="error") {
             try {

@@ -61,7 +61,7 @@ public class ApplicationDao extends CommonWrapDao<ApplicationInfo> {
                         "start_time," +
                         "end_time" +
                         ") " +
-                        "VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
+                        "VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',%d,'%s','%s','%s')",
                 t_application_info,
                 applicationInfo.getProgramName(),
                 applicationInfo.getArgs(),
@@ -76,7 +76,7 @@ public class ApplicationDao extends CommonWrapDao<ApplicationInfo> {
                 applicationInfo.getDriverCores(),
                 applicationInfo.getNumExecutors(),
                 applicationInfo.getExecutorCores(),
-                applicationInfo.getRecordCount(),
+                Integer.parseInt(applicationInfo.getRecordCount()),
                 applicationInfo.getOwner(),
                 applicationInfo.getStartTime(),
                 applicationInfo.getEndTime()

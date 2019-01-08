@@ -38,7 +38,7 @@
             setConnected(true);
             console.log('Connected:' + frame);
             //通过stompClient.subscribe订阅/topic/getResponse 目标(destination)发送的消息,这个是在控制器的@SentTo中定义的
-            stompClient.subscribe('/topic/getResponse',function(response){
+            stompClient.subscribe('/topic/getBatches',function(response){
                 showResponse(JSON.parse(response.body).responseMessage);
             });
         });
